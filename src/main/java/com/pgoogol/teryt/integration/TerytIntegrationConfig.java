@@ -1,6 +1,8 @@
 package com.pgoogol.teryt.integration;
 
+import com.pgoogol.teryt.integration.client.GUOKIKFeign;
 import com.pgoogol.teryt.integration.model.teryt.Territorial;
+import com.pgoogol.teryt.integration.service.TerytArchiveHandler;
 import com.pgoogol.teryt.integration.transformer.ParseFileAndSaveTransformer;
 import com.pgoogol.teryt.integration.transformer.UnZipFileTransformer;
 import com.pgoogol.teryt.integration.model.teryt.UpdateListTypeExt;

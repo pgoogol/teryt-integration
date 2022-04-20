@@ -12,6 +12,7 @@ public class Region {
 
     @JsonProperty(value = "wojNazwa")
     private String regionName;
+
     @JsonProperty(value = "wojIdTeryt")
     private String regionIdTeryt;
 

@@ -1,15 +1,15 @@
 package com.pgoogol.teryt.integration.transformer;
 
+import com.pgoogol.teryt.integration.mapper.AddressMapper;
 import com.pgoogol.teryt.integration.model.elk.AddressVersionEntity;
 import com.pgoogol.teryt.integration.model.elk.AdressesReadEntity;
+import com.pgoogol.teryt.integration.model.teryt.AddressFiles;
 import com.pgoogol.teryt.integration.repository.AddressRepository;
 import com.pgoogol.teryt.integration.repository.AddressVersionRepository;
-import com.pgoogol.teryt.integration.wsdl.online.ListaUlic;
-import com.pgoogol.teryt.integration.mapper.AddressMapper;
-import com.pgoogol.teryt.integration.model.teryt.AddressFiles;
 import com.pgoogol.teryt.integration.wsdl.online.Adres;
 import com.pgoogol.teryt.integration.wsdl.online.ListaAdresow;
 import com.pgoogol.teryt.integration.wsdl.online.ListaMiejscowosc;
+import com.pgoogol.teryt.integration.wsdl.online.ListaUlic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.integration.transformer.GenericTransformer;
@@ -44,7 +44,7 @@ public class ParseFileAndSaveTransformer implements GenericTransformer<Message<A
 
     @Override
     public Message<AddressFiles> transform(Message<AddressFiles> source) {
-        log.info(String.format("start parsed version %s", source.getPayload().getVerId()));
+        log.debug(String.format("start parsed version %s", source.getPayload().getVerId()));
         for (File file : source.getPayload().getFiles()) {
             ListaAdresow addressesList = mapFileToObject(file);
             List<String> addressesId = addressesList.getAdres().stream().map(Adres::getPktPrgIIPId).collect(Collectors.toList());
@@ -53,7 +53,7 @@ public class ParseFileAndSaveTransformer implements GenericTransformer<Message<A
             saveAddresses(addressesList, addresses);
         }
         updateAddressVersion(source);
-        log.info(String.format("end parsed version %s", source.getPayload().getVerId()));
+        log.debug(String.format("end parsed version %s", source.getPayload().getVerId()));
 
         return source;
     }
@@ -75,35 +75,34 @@ public class ParseFileAndSaveTransformer implements GenericTransformer<Message<A
                 return ListaAdresow.class;
             default:
                 return null;
-
         }
     }
 
     private void removeAddresses(ListaAdresow addressesList) {
         addressRepository.deleteByIds(
                 addressesList.getAdres()
-                             .stream()
-                             .filter(place -> place.getCyklZyciaDo() != null)
-                             .map(Adres::getPktPrgIIPId)
-                             .collect(Collectors.toList())
+                        .stream()
+                        .filter(place -> place.getCyklZyciaDo() != null)
+                        .map(Adres::getPktPrgIIPId)
+                        .collect(Collectors.toList())
         );
     }
 
     private void saveAddresses(ListaAdresow addressesList, Map<String, AdressesReadEntity> byIds) {
         List<AdressesReadEntity> saveAddresses = new LinkedList<>();
         addressesList.getAdres()
-         .stream()
-         .filter(place -> place.getCyklZyciaDo() == null)
-         .forEach(address -> {
-            AdressesReadEntity newAddress;
-            if (byIds != null && byIds.containsKey(address.getPktPrgIIPId())) {
-                newAddress = byIds.get(address.getPktPrgIIPId());
-                addressMapper.updateDocument(address, newAddress);
-            } else {
-                newAddress = addressMapper.soupToIndex(address);
-            }
-             saveAddresses.add(newAddress);
-        });
+                .stream()
+                .filter(place -> place.getCyklZyciaDo() == null)
+                .forEach(address -> {
+                    AdressesReadEntity newAddress;
+                    if (byIds != null && byIds.containsKey(address.getPktPrgIIPId())) {
+                        newAddress = byIds.get(address.getPktPrgIIPId());
+                        addressMapper.updateDocument(address, newAddress);
+                    } else {
+                        newAddress = addressMapper.soupToIndex(address);
+                    }
+                    saveAddresses.add(newAddress);
+                });
         log.info(String.format("addressesList size %d", saveAddresses.size()));
         addressRepository.saveAll(saveAddresses);
     }
@@ -117,12 +116,11 @@ public class ParseFileAndSaveTransformer implements GenericTransformer<Message<A
         } else {
             addressVersionRepository.save(
                     AddressVersionEntity.builder()
-                    .verId(source.getPayload().getVerId())
-                    .idTeryt(source.getPayload().getTerytId())
-                    .build()
+                            .verId(source.getPayload().getVerId())
+                            .idTeryt(source.getPayload().getTerytId())
+                            .build()
             );
         }
-
     }
 
 }

@@ -1,4 +1,4 @@
-package com.pgoogol.teryt.integration;
+package com.pgoogol.teryt.integration.client;
 
 import com.pgoogol.teryt.integration.model.teryt.Territorial;
 import org.springframework.cloud.openfeign.FeignClient;

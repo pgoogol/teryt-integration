@@ -21,7 +21,6 @@ public class UnZipFileTransformer implements GenericTransformer<Message<List<Add
     @SneakyThrows(ZipException.class)
     @Override
     public Message<List<AddressFiles>> transform(Message<List<AddressFiles>> source) {
-
         for (AddressFiles files : source.getPayload()) {
             log.debug(String.format("start unzip version %s", files.getVerId()));
             for (File file : files.getFilesZip()) {

@@ -1,12 +1,12 @@
 package com.pgoogol.teryt.integration.transformer;
 
-import com.pgoogol.teryt.integration.GUOKIKClient;
 import com.pgoogol.teryt.integration.model.elk.AddressVersionEntity;
 import com.pgoogol.teryt.integration.model.teryt.Region;
 import com.pgoogol.teryt.integration.model.teryt.Regions;
 import com.pgoogol.teryt.integration.model.teryt.Territorial;
 import com.pgoogol.teryt.integration.model.teryt.UpdateListTypeExt;
 import com.pgoogol.teryt.integration.repository.AddressVersionRepository;
+import com.pgoogol.teryt.integration.service.GUOKIKClient;
 import com.pgoogol.teryt.integration.wsdl.offline.UpdateListType;
 import org.springframework.integration.transformer.GenericTransformer;
 import org.springframework.messaging.Message;
@@ -55,7 +55,7 @@ public class FileTransformer implements GenericTransformer<Message<Territorial>,
                 })
                 .collect(Collectors.toList());
 
-        return MessageBuilder.withPayload(list.subList(5,6)).build();
+        return MessageBuilder.withPayload(list).build();
     }
 
 }

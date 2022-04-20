@@ -1,10 +1,6 @@
-package com.pgoogol.teryt.integration;
+package com.pgoogol.teryt.integration.service;
 
-import com.pgoogol.teryt.integration.wsdl.offline.ObjectFactory;
-import com.pgoogol.teryt.integration.wsdl.offline.PobierzPelne;
-import com.pgoogol.teryt.integration.wsdl.offline.PobierzPelneResponse;
-import com.pgoogol.teryt.integration.wsdl.offline.PobierzPrzyrost;
-import com.pgoogol.teryt.integration.wsdl.offline.PobierzPrzyrostResponse;
+import com.pgoogol.teryt.integration.wsdl.offline.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;

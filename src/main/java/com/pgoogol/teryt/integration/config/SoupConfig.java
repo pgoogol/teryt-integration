@@ -1,6 +1,7 @@
 package com.pgoogol.teryt.integration.config;
 
-import com.pgoogol.teryt.integration.GUOKIKClient;
+import com.pgoogol.teryt.integration.service.GUOKIKClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -12,7 +13,11 @@ public class SoupConfig {
 
     private static final String WSDL_OFFLINE_PATH = "com.pgoogol.teryt.integration.wsdl.offline";
     private static final String WSDL_ONLINE_PATH = "com.pgoogol.teryt.integration.wsdl.online";
-    private static final String DICTIONARY_OFFLINE_URI = "http://mapy.geoportal.gov.pl/wss/service/slnoff/guest/slowniki-offline";
+    private final String dictionary_offline_uri;
+
+    public SoupConfig(@Value("${teryt.guokik.uri}") String dictionary_offline_uri) {
+        this.dictionary_offline_uri = dictionary_offline_uri;
+    }
 
     @Bean
     public SaajSoapMessageFactory messageFactory() {
@@ -31,7 +36,7 @@ public class SoupConfig {
     @Bean
     public GUOKIKClient guokikClient(Jaxb2Marshaller marshaller) {
         GUOKIKClient client = new GUOKIKClient();
-        client.setDefaultUri(DICTIONARY_OFFLINE_URI);
+        client.setDefaultUri(dictionary_offline_uri);
         client.setMarshaller(marshaller);
         client.setUnmarshaller(marshaller);
         return client;

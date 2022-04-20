@@ -1,10 +1,11 @@
 package com.pgoogol.teryt.integration.transformer;
 
+import com.pgoogol.teryt.integration.model.teryt.AddressFiles;
 import com.pgoogol.teryt.integration.model.teryt.UpdateListTypeExt;
+import com.pgoogol.teryt.integration.service.PollingDirectoryManager;
 import com.pgoogol.teryt.integration.wsdl.offline.Dane;
 import com.pgoogol.teryt.integration.wsdl.offline.UpdateType;
-import com.pgoogol.teryt.integration.PollingDirectoryManager;
-import com.pgoogol.teryt.integration.model.teryt.AddressFiles;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.integration.transformer.GenericTransformer;
@@ -46,10 +47,10 @@ public class DownloadFileTransformer implements GenericTransformer<Message<List<
                             URL url = new URL(s);
                             String[] split = s.split("/");
                             File destination = new File(
-                                    pollingDirectoryManager.getPollingDir() + File.separator + split[split.length - 1]
+                            pollingDirectoryManager.getPollingDir() + File.separator + split[split.length - 1]
                             );
-                            //FileUtils.copyURLToFile(url, destination);
-                            //FileUtils.copyFile(new File("/tmp/teryt/202201171438-12-adr-f--76.zip"), destination);
+                            //TODO verify what is doing
+                            FileUtils.copyURLToFile(url, destination);
                             files.addZipFile(destination);
                         } catch (IOException e) {
                             e.printStackTrace();

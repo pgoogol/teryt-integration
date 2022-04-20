@@ -1,4 +1,4 @@
-package com.pgoogol.teryt.integration;
+package com.pgoogol.teryt.integration.service;
 
 import com.pgoogol.teryt.integration.model.teryt.AddressFiles;
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +23,7 @@ public class TerytArchiveHandler implements MessageHandler {
     @Override
     public void handleMessage(Message<?> message) throws MessagingException {
         List<AddressFiles> filesList = (List<AddressFiles>) message.getPayload();
-        log.info("Teryt files started archived");
+        log.debug("Teryt files started archived");
         Stream.concat(
                 filesList.stream().flatMap(files -> files.getFiles().stream()),
                 filesList.stream().flatMap(files -> files.getFilesZip().stream())
@@ -34,7 +34,7 @@ public class TerytArchiveHandler implements MessageHandler {
                 log.error(String.format("Unable to remove file: %s", message), e.getMessage(), e);
             }
         });
-        log.info("Teryt files archived successfully");
+        log.debug("Teryt files archived successfully");
     }
 
 }

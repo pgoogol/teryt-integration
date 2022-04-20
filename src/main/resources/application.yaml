@@ -5,20 +5,14 @@ spring:
     password: ${ELK_PASSWORD:}
     ssl_enabled: ${ELK_SSL_ENABLED:false}
     index-config:
-      #address-index: ${CUSTOMER_INDEX:adresses_read2test}
-      address-index: ${CUSTOMER_INDEX:policy_read}
-      address-version-index: ${CUSTOMER_INDEX:adresses_versiontest}
+      address-index: ${CUSTOMER_INDEX:adresses_read}
+      address-version-index: ${CUSTOMER_INDEX:adresses_version}
       shards-number: ${INDEX_SHARDS_NUMBER:1}
       replicas-number: ${INDEX_REPLICAS_NUMBER:1}
-  jpa:
-    properties:
-      hibernate:
-        generate_statistics: true
-        jdbc:
-          batch_size: 1000
-        order_inserts: true
 
 teryt:
+  guokik:
+    uri: http://mapy.geoportal.gov.pl/wss/service/slnoff/guest/slowniki-offline
   file:
     polling:
       directory: ${TERYT_FILE_DIR:/tmp/teryt}
