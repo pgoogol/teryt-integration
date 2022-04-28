@@ -11,6 +11,7 @@ import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.List;
 
 @Component
@@ -24,10 +25,12 @@ public class UnZipFileTransformer implements GenericTransformer<Message<List<Add
         for (AddressFiles files : source.getPayload()) {
             log.debug(String.format("start unzip version %s", files.getVerId()));
             for (File file : files.getFilesZip()) {
-                String destPath = file.getPath().substring(0, file.getPath().length() - 4);
-                ZipFile zipFile = new ZipFile(file);
-                zipFile.extractAll(destPath);
-                files.addFile(new File(destPath).listFiles());
+                if (Files.exists(file.toPath())) {
+                    String destPath = file.getPath().substring(0, file.getPath().length() - 4);
+                    ZipFile zipFile = new ZipFile(file);
+                    zipFile.extractAll(destPath);
+                    files.addFile(new File(destPath).listFiles());
+                }
             }
             log.debug(String.format("end unzip version %s", files.getVerId()));
         }

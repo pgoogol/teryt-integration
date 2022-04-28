@@ -6,12 +6,11 @@ import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.transport.endpoints.BooleanResponse;
 import com.pgoogol.teryt.integration.config.properties.IndexConfigProperties;
 import com.pgoogol.teryt.integration.model.elk.AddressVersionEntity;
-import com.pgoogol.teryt.integration.model.elk.AdressesReadEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -34,9 +33,24 @@ public class AddressVersionRepository {
         this.client = client;
     }
 
+    @PostConstruct
+    public void init() {
+        try {
+            if (!indexExists()) {
+                indexCreate();
+            }
+        } catch (IOException | ElasticsearchException e) {
+            log.error("create error");
+        }
+    }
+
     public boolean indexExists() throws IOException {
         BooleanResponse exists = client.indices().exists(builder -> builder.index(indexConfigProperties.getAddressVersionIndex()));
         return exists.value();
+    }
+
+    public void indexCreate() throws IOException {
+        client.create(builder -> builder.index(indexConfigProperties.getAddressVersionIndex()));
     }
 
     public List<AddressVersionEntity> get() {
@@ -87,7 +101,7 @@ public class AddressVersionRepository {
                 clazz
             );
         } catch (IOException | ElasticsearchException e) {
-            log.error("Save error", e);
+            log.error("update error", e);
         }
     }
 

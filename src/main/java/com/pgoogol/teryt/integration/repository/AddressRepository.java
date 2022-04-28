@@ -11,10 +11,9 @@ import com.pgoogol.teryt.integration.model.elk.AdressesReadEntity;
 import com.pgoogol.teryt.integration.model.elk.BaseEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.core.GenericTypeResolver;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
@@ -34,9 +33,24 @@ public class AddressRepository {
         this.client = client;
     }
 
+    @PostConstruct
+    public void init() {
+        try {
+            if (!indexExists()) {
+                indexCreate();
+            }
+        } catch (IOException | ElasticsearchException e) {
+            log.error("create error");
+        }
+    }
+
     public boolean indexExists() throws IOException {
         BooleanResponse exists = client.indices().exists(builder -> builder.index(indexConfigProperties.getAddressIndex()));
         return exists.value();
+    }
+
+    public void indexCreate() throws IOException {
+        client.create(builder -> builder.index(indexConfigProperties.getAddressIndex()));
     }
 
     public Map<String, AdressesReadEntity> getByIds(List<String> ids) {
