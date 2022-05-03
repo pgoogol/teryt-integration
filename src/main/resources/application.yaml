@@ -5,8 +5,8 @@ spring:
     password: ${ELK_PASSWORD:}
     ssl_enabled: ${ELK_SSL_ENABLED:false}
     index-config:
-      address-index: ${CUSTOMER_INDEX:adresses_read}
-      address-version-index: ${CUSTOMER_INDEX:adresses_version}
+      address-index: ${CUSTOMER_INDEX:addresses_read}
+      address-version-index: ${CUSTOMER_INDEX:addresses_version_read}
       shards-number: ${INDEX_SHARDS_NUMBER:1}
       replicas-number: ${INDEX_REPLICAS_NUMBER:1}
 

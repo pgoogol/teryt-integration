@@ -50,7 +50,7 @@ public class AddressRepository {
     }
 
     public void indexCreate() throws IOException {
-        client.create(builder -> builder.index(indexConfigProperties.getAddressIndex()));
+        client.indices().create(builder -> builder.index(indexConfigProperties.getAddressIndex()));
     }
 
     public Map<String, AdressesReadEntity> getByIds(List<String> ids) {

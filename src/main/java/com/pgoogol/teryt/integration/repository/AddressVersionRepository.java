@@ -50,7 +50,7 @@ public class AddressVersionRepository {
     }
 
     public void indexCreate() throws IOException {
-        client.create(builder -> builder.index(indexConfigProperties.getAddressVersionIndex()));
+        client.indices().create(builder -> builder.index(indexConfigProperties.getAddressVersionIndex()));
     }
 
     public List<AddressVersionEntity> get() {
