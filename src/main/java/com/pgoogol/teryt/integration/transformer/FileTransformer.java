@@ -5,7 +5,7 @@ import com.pgoogol.teryt.integration.model.teryt.Region;
 import com.pgoogol.teryt.integration.model.teryt.Regions;
 import com.pgoogol.teryt.integration.model.teryt.Territorial;
 import com.pgoogol.teryt.integration.model.teryt.UpdateListTypeExt;
-import com.pgoogol.teryt.integration.repository.AddressVersionRepository;
+import com.pgoogol.teryt.integration.service.ElasticsearchService;
 import com.pgoogol.teryt.integration.service.GUOKIKClient;
 import com.pgoogol.teryt.integration.wsdl.offline.UpdateListType;
 import org.springframework.integration.transformer.GenericTransformer;
@@ -15,29 +15,24 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
 public class FileTransformer implements GenericTransformer<Message<Territorial>, Message<List<UpdateListTypeExt>>> {
 
     private final GUOKIKClient client;
-    private final AddressVersionRepository repository;
+    private final ElasticsearchService service;
 
-    public FileTransformer(GUOKIKClient client, AddressVersionRepository repository) {
+    public FileTransformer(GUOKIKClient client, ElasticsearchService service) {
         this.client = client;
-        this.repository = repository;
+        this.service = service;
     }
 
     @Override
     public Message<List<UpdateListTypeExt>> transform(Message<Territorial> source) {
         List<Regions> regionsList = source.getPayload().getRegionsList();
-        Map<String, AddressVersionEntity> addressVersionsId = repository.get()
-                .stream()
-                .collect(Collectors.toMap(
-                        AddressVersionEntity::getIdTeryt,
-                        Function.identity()
-                ));
+
+        Map<String, AddressVersionEntity> addressVersionsId = service.getAllTerytVersion();
         boolean isNotEmpty = !addressVersionsId.isEmpty();
 
         List<UpdateListTypeExt> list = regionsList.stream()
@@ -55,7 +50,7 @@ public class FileTransformer implements GenericTransformer<Message<Territorial>,
                 })
                 .collect(Collectors.toList());
 
-        return MessageBuilder.withPayload(list).build();
+        return MessageBuilder.withPayload(list.subList(5,6)).build();
     }
 
 }

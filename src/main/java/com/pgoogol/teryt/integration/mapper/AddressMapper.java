@@ -1,6 +1,6 @@
 package com.pgoogol.teryt.integration.mapper;
 
-import com.pgoogol.teryt.integration.model.elk.AdressesReadEntity;
+import com.pgoogol.teryt.integration.model.elk.AddressesReadEntity;
 import com.pgoogol.teryt.integration.wsdl.online.Adres;
 import com.pgoogol.teryt.integration.wsdl.online.Miejscowosc;
 import org.mapstruct.Mapper;
@@ -11,11 +11,11 @@ import org.mapstruct.MappingTarget;
 public interface AddressMapper {
 
     @Mapping(source = "miejscIIPId", target = "id")
-    AdressesReadEntity soupToIndex(Miejscowosc source);
+    AddressesReadEntity soupToIndex(Miejscowosc source);
 
     @Mapping(source = "pktPrgIIPId", target = "id")
-    AdressesReadEntity soupToIndex(Adres source);
+    AddressesReadEntity soupToIndex(Adres source);
 
-    void updateDocument(Adres source, @MappingTarget AdressesReadEntity dest);
+    void updateDocument(Adres source, @MappingTarget AddressesReadEntity dest);
 
 }

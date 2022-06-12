@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdressesReadEntity implements BaseEntity {
+public class AddressesReadEntity implements BaseEntity {
 
     //miejscIIPId
     private String id;

@@ -5,8 +5,8 @@ spring:
     password: ${ELK_PASSWORD:}
     ssl_enabled: ${ELK_SSL_ENABLED:false}
     index-config:
-      address-index: ${CUSTOMER_INDEX:addresses_read}
-      address-version-index: ${CUSTOMER_INDEX:addresses_version_read}
+      address-index: ${CUSTOMER_INDEX:addresses_dictionary}
+      address-version-index: ${CUSTOMER_INDEX:addresses_version_dictionary}
       shards-number: ${INDEX_SHARDS_NUMBER:1}
       replicas-number: ${INDEX_REPLICAS_NUMBER:1}
 
@@ -15,7 +15,8 @@ teryt:
     uri: http://mapy.geoportal.gov.pl/wss/service/slnoff/guest/slowniki-offline
   file:
     polling:
-      directory: ${TERYT_FILE_DIR:/tmp/teryt}
+      #directory: ${TERYT_FILE_DIR:/tmp/teryt}
+      directory: ${TERYT_FILE_DIR:C:/tmp/teryt}
       cron:
         expression: ${CIS_FILE_POLLING_EXPRESSION:0/30 * * * * *}
 
