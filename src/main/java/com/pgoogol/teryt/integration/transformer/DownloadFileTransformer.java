@@ -34,7 +34,6 @@ public class DownloadFileTransformer implements GenericTransformer<Message<List<
     public Message<List<AddressFiles>> transform(Message<List<UpdateListTypeExt>> source) {
         List<AddressFiles> filesList = new LinkedList<>();
         source.getPayload().forEach(updateListType -> {
-            log.info(String.format("start download version %s", updateListType.getVerId()));
             AddressFiles files = new AddressFiles();
             files.setVerId(updateListType.getVerId());
             files.setTerytId(updateListType.getTerytId());
@@ -49,7 +48,6 @@ public class DownloadFileTransformer implements GenericTransformer<Message<List<
                             File destination = new File(
                             pollingDirectoryManager.getPollingDir() + File.separator + split[split.length - 1]
                             );
-                            //TODO verify what is doing
                             FileUtils.copyURLToFile(url, destination);
                             files.addZipFile(destination);
                         } catch (IOException e) {
@@ -57,7 +55,6 @@ public class DownloadFileTransformer implements GenericTransformer<Message<List<
                         }
                     });
             filesList.add(files);
-            log.info(String.format("end download version %s", updateListType.getVerId()));
         });
         return MessageBuilder.withPayload(filesList).build();
     }

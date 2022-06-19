@@ -44,18 +44,18 @@ public class TerytIntegrationConfig {
     @Bean
     public IntegrationFlow terytFilePollingFlow1(@Value("${teryt.file.polling.cron.expression}") String pollExpression) {
         return IntegrationFlows.fromSupplier(this::terytFilePollingFlow, c -> c.poller(Pollers.cron(pollExpression)))
-                .log(LoggingHandler.Level.DEBUG, new LiteralExpression("start process"))
+                .log(LoggingHandler.Level.DEBUG, new LiteralExpression("START PROCESS"))
                 .transform(fileTransformer)
                 .transform(downloadFileTransformer)
-                .log(LoggingHandler.Level.DEBUG, new LiteralExpression("after download files"))
+                .log(LoggingHandler.Level.DEBUG, new LiteralExpression("AFTER DOWNLOAD FILES"))
                 .transform(unZipFileTransformer)
-                .log(LoggingHandler.Level.DEBUG, new LiteralExpression("after unzip files"))
+                .log(LoggingHandler.Level.DEBUG, new LiteralExpression("AFTER UNZIP FILES"))
                 .split()
-                .log(LoggingHandler.Level.DEBUG, m -> "process address - teryt id -> " + ((UpdateListTypeExt)m.getPayload()).getTerytId())
+                .log(LoggingHandler.Level.DEBUG, m -> "PROCESS ADDRESS - TERYT ID -> " + ((UpdateListTypeExt)m.getPayload()).getTerytId())
                 .transform(parseFileAndSaveTransformer)
                 .aggregate()
-                .log(LoggingHandler.Level.DEBUG, new LiteralExpression("aggregate"))
-                .log(LoggingHandler.Level.DEBUG, new LiteralExpression("end process"))
+                .log(LoggingHandler.Level.DEBUG, new LiteralExpression("AGGERGATE"))
+                .log(LoggingHandler.Level.DEBUG, new LiteralExpression("END PROCESS"))
                 .handle(terytArchiveHandler)
                 .get();
     }

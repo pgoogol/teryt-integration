@@ -26,6 +26,10 @@ public class ParseFileAndSaveTransformer implements GenericTransformer<Message<A
 
     private final Logger log = LogManager.getLogger(ParseFileAndSaveTransformer.class);
 
+    private static final String CITY_CODE_CLASS = "m";
+    private static final String STREET_CODE_CLASS = "ul";
+    private static final String ADDRESS_CODE_CLASS = "adr";
+
     private final Jaxb2Marshaller jaxb2Marshaller;
     private final AddressMapper addressMapper;
     private final ElasticsearchService service;
@@ -41,7 +45,6 @@ public class ParseFileAndSaveTransformer implements GenericTransformer<Message<A
 
     @Override
     public Message<AddressFiles> transform(Message<AddressFiles> source) {
-        log.debug(String.format("start parsed version %s", source.getPayload().getVerId()));
         for (File file : source.getPayload().getFiles()) {
             ListaAdresow addressesList = mapFileToObject(file);
             List<String> addressesId = addressesList.getAdres().stream().map(Adres::getPktPrgIIPId).collect(Collectors.toList());
@@ -50,7 +53,6 @@ public class ParseFileAndSaveTransformer implements GenericTransformer<Message<A
             saveAddresses(addressesList, addresses);
         }
         updateAddressVersion(source);
-        log.debug(String.format("end parsed version %s", source.getPayload().getVerId()));
 
         return source;
     }
@@ -62,13 +64,13 @@ public class ParseFileAndSaveTransformer implements GenericTransformer<Message<A
     }
 
     private Class<?> setClassObject(String name) {
-        String[] split = name.split("-");
+        String[] split = name.split(File.separator);
         switch (split[2]) {
-            case "m":
+            case CITY_CODE_CLASS:
                 return ListaMiejscowosc.class;
-            case "ul":
+            case STREET_CODE_CLASS:
                 return ListaUlic.class;
-            case "adr":
+            case ADDRESS_CODE_CLASS:
                 return ListaAdresow.class;
             default:
                 return null;
@@ -90,7 +92,6 @@ public class ParseFileAndSaveTransformer implements GenericTransformer<Message<A
                     }
                     saveAddresses.add(newAddress);
                 });
-        log.info(String.format("addressesList size %d", saveAddresses.size()));
 
         service.saveAll(saveAddresses);
     }

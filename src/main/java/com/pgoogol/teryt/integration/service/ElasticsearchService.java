@@ -1,6 +1,5 @@
 package com.pgoogol.teryt.integration.service;
 
-import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.pgoogol.elasticsearch.data.repository.ElasticsearchRepository;
 import com.pgoogol.teryt.integration.config.properties.IndexConfigProperties;
@@ -14,32 +13,12 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 public class ElasticsearchService {
-
-    public enum Dictionary {
-
-        ADDRESS(IndexConfigProperties::getAddressIndex, AddressesReadEntity.class),
-        ADDRESS_VERSION(IndexConfigProperties::getAddressVersionIndex, AddressVersionEntity.class);
-
-        private String indexName;
-        private Class clazz;
-        Dictionary(Function<IndexConfigProperties, String> function, Class clazz) {
-        }
-
-        public String getIndexName() {
-            return indexName;
-        }
-
-        public Class getClazz() {
-            return clazz;
-        }
-    }
 
     protected static final int SIZE = 100;
 
@@ -61,7 +40,7 @@ public class ElasticsearchService {
                 .map(Hit::source)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(
-                        AddressVersionEntity::getIdTeryt,
+                        BaseEntity::getId,
                         Function.identity()
                 ));
     }

@@ -23,7 +23,6 @@ public class TerytArchiveHandler implements MessageHandler {
     @Override
     public void handleMessage(Message<?> message) throws MessagingException {
         List<AddressFiles> filesList = (List<AddressFiles>) message.getPayload();
-        log.debug("Teryt files started archived");
         Stream.concat(
                 filesList.stream().flatMap(files -> files.getFiles().stream()),
                 filesList.stream().flatMap(files -> files.getFilesZip().stream())
@@ -34,7 +33,6 @@ public class TerytArchiveHandler implements MessageHandler {
                 log.error(String.format("Unable to remove file: %s", message), e.getMessage(), e);
             }
         });
-        log.debug("Teryt files archived successfully");
     }
 
 }

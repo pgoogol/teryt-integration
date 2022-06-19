@@ -18,7 +18,6 @@ public class GUOKIKClient extends WebServiceGatewaySupport {
         PobierzPelne request = objectFactory.createPobierzPelne();
         request.setTeryt(teryt);
 
-        log.info(String.format("Requesting location for teryt id = %s", teryt));
         JAXBElement<PobierzPelne> pobierzPelne = objectFactory.createPobierzPelne(request);
         JAXBElement<PobierzPelneResponse> element = (JAXBElement<PobierzPelneResponse>) getWebServiceTemplate().marshalSendAndReceive(pobierzPelne);
         return element.getValue();
@@ -30,7 +29,6 @@ public class GUOKIKClient extends WebServiceGatewaySupport {
         PobierzPrzyrost request = objectFactory.createPobierzPrzyrost();
         request.setVerId(version);
 
-        log.info(String.format("Requesting location for version id = %s", version));
         JAXBElement<PobierzPrzyrost> pobierzPrzyrost = objectFactory.createPobierzPrzyrost(request);
         JAXBElement<PobierzPrzyrostResponse> element = (JAXBElement<PobierzPrzyrostResponse>) getWebServiceTemplate().marshalSendAndReceive(pobierzPrzyrost);
         return element.getValue();
