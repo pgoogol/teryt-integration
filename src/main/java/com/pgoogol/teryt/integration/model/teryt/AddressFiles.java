@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +16,8 @@ public class AddressFiles {
     private List<File> filesZip = new LinkedList<>();
     private String verId;
     private String terytId;
+
+    private List<String> errors = Collections.emptyList();
 
     public void addZipFile(File file) {
         filesZip.add(file);

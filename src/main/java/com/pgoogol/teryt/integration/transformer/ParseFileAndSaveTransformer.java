@@ -9,8 +9,6 @@ import com.pgoogol.teryt.integration.wsdl.online.Adres;
 import com.pgoogol.teryt.integration.wsdl.online.ListaAdresow;
 import com.pgoogol.teryt.integration.wsdl.online.ListaMiejscowosc;
 import com.pgoogol.teryt.integration.wsdl.online.ListaUlic;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.integration.transformer.GenericTransformer;
 import org.springframework.integration.xml.transformer.UnmarshallingTransformer;
 import org.springframework.messaging.Message;
@@ -23,8 +21,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class ParseFileAndSaveTransformer implements GenericTransformer<Message<AddressFiles>, Message<AddressFiles>> {
-
-    private final Logger log = LogManager.getLogger(ParseFileAndSaveTransformer.class);
 
     private static final String CITY_CODE_CLASS = "m";
     private static final String STREET_CODE_CLASS = "ul";
@@ -92,7 +88,7 @@ public class ParseFileAndSaveTransformer implements GenericTransformer<Message<A
                     }
                     saveAddresses.add(newAddress);
                 });
-
+        //todo handle error from saveAll
         service.saveAll(saveAddresses);
     }
 

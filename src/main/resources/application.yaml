@@ -1,4 +1,8 @@
 spring:
+  mail:
+    host: ${SPRING_MAIL_HOST:}
+    port: ${SPRING_MAIL_PORT:25}
+    username: ${SPRING_MAIL_USERNAME:}
   elasticsearch:
     uris: ${ELK_REST_URIS:localhost:9200}
     username: ${ELK_USERNAME:}
@@ -9,6 +13,9 @@ spring:
       address-version-index: ${CUSTOMER_INDEX:addresses_version_dictionary}
       shards-number: ${INDEX_SHARDS_NUMBER:1}
       replicas-number: ${INDEX_REPLICAS_NUMBER:1}
+
+notifications:
+  recipients: ${NOTIFICATIONS_RECIPIENTS:}
 
 teryt:
   guokik:
