@@ -16,7 +16,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableIntegration
 @ConfigurationPropertiesScan
 @ComponentScan(basePackages = {
-        "com.pgoogol.elasticsearch.data.repository"
+        "com.pgoogol.elasticsearch.data.repository",
+        "com.pgoogol.teryt.integration"
 })
 @Import({
         ElkConfig.class
