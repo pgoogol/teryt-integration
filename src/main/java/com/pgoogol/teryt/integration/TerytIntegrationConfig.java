@@ -51,7 +51,11 @@ public class TerytIntegrationConfig {
                 .transform(unZipFileTransformer)
                 .log(LoggingHandler.Level.DEBUG, new LiteralExpression("AFTER UNZIP FILES"))
                 .split()
-                .log(LoggingHandler.Level.DEBUG, m -> "PROCESS ADDRESS - TERYT ID -> " + ((UpdateListTypeExt)m.getPayload()).getTerytId())
+                .log(
+                        LoggingHandler.Level.DEBUG,
+                        m -> "PROCESS ADDRESS - TERYT ID -> " + ((UpdateListTypeExt)m.getPayload()).getTerytId() +
+                        "VERSION ID -> " + ((UpdateListTypeExt)m.getPayload()).getVerId()
+                )
                 .transform(parseFileAndSaveTransformer)
                 .aggregate()
                 .log(LoggingHandler.Level.DEBUG, new LiteralExpression("AGGERGATE"))

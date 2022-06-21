@@ -22,6 +22,7 @@ public class UnZipFileTransformer implements GenericTransformer<Message<List<Add
     @Override
     public Message<List<AddressFiles>> transform(Message<List<AddressFiles>> source) {
         for (AddressFiles files : source.getPayload()) {
+            log.debug(String.format("START UNZIP VERSION %s TERYT ID %s", files.getVerId(), files.getTerytId()));
             for (File file : files.getFilesZip()) {
                 if (Files.exists(file.toPath())) {
                     String[] splitPath = file.getPath().split("\\.");
@@ -42,6 +43,7 @@ public class UnZipFileTransformer implements GenericTransformer<Message<List<Add
                     files.addFile(new File(destPath).listFiles());
                 }
             }
+            log.debug("END UNZIP VERSION");
         }
         return source;
     }
