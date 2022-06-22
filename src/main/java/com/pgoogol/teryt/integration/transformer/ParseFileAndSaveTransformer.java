@@ -9,6 +9,8 @@ import com.pgoogol.teryt.integration.wsdl.online.Adres;
 import com.pgoogol.teryt.integration.wsdl.online.ListaAdresow;
 import com.pgoogol.teryt.integration.wsdl.online.ListaMiejscowosc;
 import com.pgoogol.teryt.integration.wsdl.online.ListaUlic;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.integration.transformer.GenericTransformer;
 import org.springframework.integration.xml.transformer.UnmarshallingTransformer;
 import org.springframework.messaging.Message;
@@ -16,11 +18,14 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 public class ParseFileAndSaveTransformer implements GenericTransformer<Message<AddressFiles>, Message<AddressFiles>> {
+
+    private final Logger log = LogManager.getLogger(ParseFileAndSaveTransformer.class);
 
     private static final String CITY_CODE_CLASS = "m";
     private static final String STREET_CODE_CLASS = "ul";
@@ -46,7 +51,7 @@ public class ParseFileAndSaveTransformer implements GenericTransformer<Message<A
             List<String> addressesId = addressesList.getAdres().stream().map(Adres::getPktPrgIIPId).collect(Collectors.toList());
             Map<String, AddressesReadEntity> addresses = service.getByIds(addressesId);
             service.deleteByIds(addressesList);
-            saveAddresses(addressesList, addresses);
+            saveAddresses(source.getPayload(), addressesList, addresses);
         }
         updateAddressVersion(source);
 
@@ -73,7 +78,7 @@ public class ParseFileAndSaveTransformer implements GenericTransformer<Message<A
         }
     }
 
-    private void saveAddresses(ListaAdresow addressesList, Map<String, AddressesReadEntity> byIds) {
+    private void saveAddresses(AddressFiles files, ListaAdresow addressesList, Map<String, AddressesReadEntity> byIds) {
         List<AddressesReadEntity> saveAddresses = new LinkedList<>();
         addressesList.getAdres()
                 .stream()
@@ -88,8 +93,12 @@ public class ParseFileAndSaveTransformer implements GenericTransformer<Message<A
                     }
                     saveAddresses.add(newAddress);
                 });
-        //todo handle error from saveAll
-        service.saveAll(saveAddresses);
+        try {
+            service.saveAll(saveAddresses);
+        } catch (IOException e) {
+            files.addError(String.format("Download error in VERSION %s, TERYT ID %s", files.getVerId(), files.getTerytId()));
+            log.error("Download file exception", e);
+        }
     }
 
     private void updateAddressVersion(Message<AddressFiles> source) {

@@ -35,4 +35,8 @@ public class AddressFiles {
         this.files.addAll(List.of(files));
     }
 
+    public void addError(String message) {
+        errors.add(message);
+    }
+
 }

@@ -32,6 +32,7 @@ public class UnZipFileTransformer implements GenericTransformer<Message<List<Add
                     try {
                         zipFile.extractAll(destPath);
                     } catch (ZipException e) {
+                        files.addError(String.format("Unzip error in VERSION %s, TERYT ID %s", files.getVerId(), files.getTerytId()));
                         log.error("Extract exception", e);
                     } finally {
                         try {

@@ -58,7 +58,8 @@ public class DownloadFileTransformer implements GenericTransformer<Message<List<
                             FileUtils.copyURLToFile(url, destination);
                             files.addZipFile(destination);
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            files.addError(String.format("Download error in VERSION %s, TERYT ID %s", files.getVerId(), files.getTerytId()));
+                            log.error("Download file exception", e);
                         }
                     });
             filesList.add(files);

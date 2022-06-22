@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -67,7 +68,7 @@ public class ElasticsearchService {
         return repository.save(indexConfigProperties.getAddressIndex(), item.getVerId(), item);
     }
 
-    public List<AddressesReadEntity> saveAll(List<AddressesReadEntity> items) {
+    public List<AddressesReadEntity> saveAll(List<AddressesReadEntity> items) throws IOException {
         return repository.saveAll(indexConfigProperties.getAddressIndex(), AddressesReadEntity::getId, items);
     }
 
